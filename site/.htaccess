@@ -1,0 +1,19 @@
+# Date Nails — endereços curtos: seusite.com.br/nome-do-studio
+Options -Indexes
+DirectoryIndex index.html
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^([a-z0-9][a-z0-9-]{1,38}[a-z0-9])/?$ agendar/index.html [L]
+</IfModule>
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  <FilesMatch "\.(css|js|svg|png|woff2)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  <FilesMatch "(config\.js|\.html)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

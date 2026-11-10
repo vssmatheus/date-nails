@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>Meus agendamentos</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Great+Vibes&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/client.css">
+  <script src="../assets/themes.js"></script>
+  <script>try{dnApplyTheme(localStorage.getItem("dn-theme-"+new URLSearchParams(location.search).get("s"))||"rosa")}catch(e){dnApplyTheme("rosa")}</script>
+</head>
+<body>
+  <header class="c-head">
+    <div class="c-head-inner">
+      <a class="c-brand" id="brandLink" href="#">
+        <span class="mark" id="mark"><svg viewBox="0 0 40 40"><path d="M20 4c5.5 7.4 11 13.2 11 20a11 11 0 0 1-22 0C9 17.2 14.5 11.4 20 4Z" fill="currentColor"/></svg></span>
+        <span class="c-name" id="studioName">&nbsp;</span>
+      </a>
+      <a class="btn btn-cta btn-sm" id="newBtn" href="#">Novo agendamento</a>
+    </div>
+    <h1 class="serif c-title">Meus <em>agendamentos</em></h1>
+  </header>
+
+  <main class="c-main">
+    <form class="card c-login" id="lookup" hidden>
+      <p class="c-intro">Digite o nome e o WhatsApp que você usou ao agendar.</p>
+      <div class="field"><label for="cName">Seu nome</label><input id="cName" autocomplete="given-name" required></div>
+      <div class="field"><label for="cPhone">WhatsApp</label><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="(11) 99999-9999"></div>
+      <button class="btn btn-primary btn-block" type="submit">Ver meus agendamentos</button>
+    </form>
+
+    <div id="results"></div>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="../config.js"></script>
+  <script src="../assets/supabase.js"></script>
+  <script src="../assets/dn.js"></script>
+  <script src="../assets/client.js"></script>
+</body>
+</html>

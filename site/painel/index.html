@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel · Date Nails</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Great+Vibes&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/admin.css">
+  <script src="../assets/themes.js"></script>
+  <script>try{dnApplyTheme(localStorage.getItem("dn-panel-theme")||"rosa")}catch(e){dnApplyTheme("rosa")}</script>
+</head>
+<body>
+
+  <!-- ============ Login / cadastro ============ -->
+  <div class="auth" id="auth" hidden>
+    <div class="auth-card">
+      <p class="auth-word script">Date Nails</p>
+      <p class="auth-sub">A agenda digital do seu studio</p>
+
+      <div class="tabs" role="tablist" id="authTabs">
+        <button type="button" role="tab" class="tab active" data-tab="login">Entrar</button>
+        <button type="button" role="tab" class="tab" data-tab="signup">Criar conta</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="field"><label for="lEmail">E-mail</label><input id="lEmail" type="email" autocomplete="username" required></div>
+        <div class="field"><label for="lPw">Senha</label><input id="lPw" type="password" autocomplete="current-password" required></div>
+        <button class="btn btn-primary btn-block" type="submit">Entrar</button>
+        <button class="link-btn" type="button" id="forgotBtn">Esqueci minha senha</button>
+      </form>
+
+      <form id="signupForm" class="auth-form" hidden>
+        <div class="field"><label for="sEmail">E-mail</label><input id="sEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="sPw">Crie uma senha</label><input id="sPw" type="password" autocomplete="new-password" minlength="6" required></div>
+        <button class="btn btn-primary btn-block" type="submit" id="signupBtn">Começar teste grátis</button>
+        <p class="hint center" id="trialHint">Sem cartão. Você só paga se quiser continuar.</p>
+      </form>
+
+      <form id="resetForm" class="auth-form" hidden>
+        <p class="hint">Digite sua nova senha.</p>
+        <div class="field"><label for="rPw">Nova senha</label><input id="rPw" type="password" autocomplete="new-password" minlength="6" required></div>
+        <button class="btn btn-primary btn-block" type="submit">Salvar nova senha</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ Primeiro acesso ============ -->
+  <div class="auth" id="onboard" hidden>
+    <form class="auth-card wide" id="onboardForm">
+      <p class="auth-word script">Bem-vinda!</p>
+      <p class="auth-sub">Vamos criar a agenda do seu studio. Leva 1 minuto.</p>
+      <div class="field"><label for="oName">Nome do studio</label><input id="oName" required maxlength="60" placeholder="Ex.: Studio Bella Nails"></div>
+      <div class="field"><label for="oSlug">Endereço da sua agenda</label>
+        <div class="slug-input"><span id="slugPrefix">site/</span><input id="oSlug" required maxlength="40" placeholder="bella-nails"></div>
+        <span class="hint">Só letras, números e hífen. É o link que você vai colocar no Instagram.</span></div>
+      <div class="field"><label for="oWa">WhatsApp do studio</label><input id="oWa" type="tel" inputmode="tel" required placeholder="(11) 99999-9999"></div>
+      <div class="field"><label for="oSeg">Especialidade</label>
+        <select id="oSeg"><option>Nail design</option><option>Alongamento de unhas e maquiagem</option><option>Manicure e pedicure</option><option>Design de sobrancelhas</option><option>Cílios</option><option>Maquiagem</option><option>Estética</option><option>Cabelo</option></select></div>
+      <button class="btn btn-primary btn-block" type="submit">Criar minha agenda</button>
+      <button class="link-btn" type="button" data-logout>Sair</button>
+    </form>
+  </div>
+
+  <!-- ============ App ============ -->
+  <div class="app" id="app" hidden>
+    <nav class="nav" aria-label="Menu">
+      <div class="nav-brand">
+        <span class="mark sm" id="navMark"><svg viewBox="0 0 40 40"><path d="M20 4c5.5 7.4 11 13.2 11 20a11 11 0 0 1-22 0C9 17.2 14.5 11.4 20 4Z" fill="currentColor"/></svg></span>
+        <span class="nav-word" id="navName">Date Nails</span>
+      </div>
+      <button class="nav-item active" data-view="agenda"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Agenda</span></button>
+      <button class="nav-item" data-view="clientes"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.8 4-5.5 7.5-5.5s6.3 1.7 7.5 5.5"/></svg><span>Clientes</span></button>
+      <button class="nav-item" data-view="financeiro"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M21 19H3"/></svg><span>Financeiro</span></button>
+      <button class="nav-item" data-view="servicos"><svg viewBox="0 0 24 24"><path d="M12 3c3.5 4.7 7 8.4 7 12.6A7 7 0 0 1 5 15.6C5 11.4 8.5 7.7 12 3Z"/></svg><span>Serviços</span></button>
+      <button class="nav-item desk" data-view="folgas"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg><span>Folgas</span></button>
+      <button class="nav-item desk" data-view="aparencia"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="8.5" cy="10" r="1.3"/><circle cx="12" cy="7.5" r="1.3"/><circle cx="15.5" cy="10" r="1.3"/><path d="M12 20.5c-1.5 0-2-1-2-2s1-1.5 2-1.5"/></svg><span>Aparência</span></button>
+      <button class="nav-item desk" data-view="whatsapp"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/></svg><span>WhatsApp</span></button>
+      <button class="nav-item desk" data-view="ajustes"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span>Ajustes</span></button>
+      <button class="nav-item desk" data-view="assinatura"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 15h3"/></svg><span>Assinatura</span></button>
+      <button class="nav-item mob" data-more><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Mais</span></button>
+      <div class="nav-foot">
+        <a class="nav-link" id="publicLinkNav" href="#" target="_blank" rel="noopener">Ver minha página ↗</a>
+        <a class="nav-link" id="saasLink" href="../saas/" hidden>Painel da plataforma</a>
+        <button class="nav-link" type="button" data-logout>Sair</button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="sub-banner" id="subBanner" hidden></div>
+
+      <!-- AGENDA -->
+      <section class="view active" data-view="agenda">
+        <header class="vhead">
+          <div><p class="vkicker" id="agendaKicker"></p><h1 class="serif" id="agendaTitle">Hoje</h1></div>
+          <div class="vhead-actions">
+            <button class="icon-btn" id="prevDay" aria-label="Dia anterior">‹</button>
+            <button class="btn btn-ghost btn-sm" id="todayBtn">Hoje</button>
+            <button class="icon-btn" id="nextDay" aria-label="Próximo dia">›</button>
+            <input type="date" class="input date-pick" id="datePick" aria-label="Escolher data">
+          </div>
+        </header>
+        <div class="week" id="week"></div>
+        <div class="pending-banner" id="pendingBanner" hidden></div>
+        <div class="agenda-grid">
+          <div>
+            <div class="timeline" id="timeline"></div>
+          </div>
+          <aside class="agenda-side">
+            <div class="kpis" id="kpis"></div>
+            <section class="side-card" id="upcomingBox">
+              <h2 class="side-title">Próximos agendamentos</h2>
+              <div id="upcomingList"></div>
+            </section>
+            <section class="side-card" id="tomorrowBox" hidden>
+              <h2 class="side-title">Lembretes de amanhã</h2>
+              <p class="hint">O WhatsApp automático está desligado. Toque para enviar manualmente.</p>
+              <div id="tomorrowList"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <!-- CLIENTES -->
+      <section class="view" data-view="clientes">
+        <header class="vhead"><div><p class="vkicker">Relacionamento</p><h1 class="serif">Clientes</h1></div>
+          <div class="vhead-actions"><button class="btn btn-ghost btn-sm" id="exportBtn">Exportar agendamentos</button></div></header>
+        <div class="kpis kpis-4" id="monthStats"></div>
+        <input class="input search" id="clientSearch" placeholder="Buscar por nome ou telefone…" type="search">
+        <div class="list" id="clientList"></div>
+      </section>
+
+      <!-- FINANCEIRO -->
+      <section class="view" data-view="financeiro">
+        <header class="vhead">
+          <div><p class="vkicker">Controle do studio</p><h1 class="serif">Financeiro</h1></div>
+          <div class="vhead-actions">
+            <button class="icon-btn" id="finPrev" aria-label="Mês anterior">‹</button>
+            <span class="month-pill" id="finMonth"></span>
+            <button class="icon-btn" id="finNext" aria-label="Próximo mês">›</button>
+          </div>
+        </header>
+        <div class="fin-actions">
+          <button class="btn btn-rose btn-sm" data-fin-new="entrada">+ Entrada</button>
+          <button class="btn btn-primary btn-sm" data-fin-new="saida">+ Saída</button>
+          <span class="spacer"></span>
+          <button class="btn btn-ghost btn-sm" id="finCsv">Exportar planilha</button>
+          <button class="btn btn-ghost btn-sm" id="finPrint">Imprimir relatório</button>
+        </div>
+        <div class="print-head" id="printHead"></div>
+        <div class="kpis kpis-4" id="finKpis"></div>
+        <div class="fin-grid">
+          <div class="card"><h2 class="card-title">Entradas por categoria</h2><div id="finIn"></div></div>
+          <div class="card"><h2 class="card-title">Saídas por categoria</h2><div id="finOut"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-row"><h2 class="card-title">Lançamentos</h2>
+            <div class="seg" id="finFilter"><button class="on" data-f="todos">Todos</button><button data-f="entrada">Entradas</button><button data-f="saida">Saídas</button></div></div>
+          <div id="finList"></div>
+        </div>
+      </section>
+
+      <!-- SERVIÇOS -->
+      <section class="view" data-view="servicos">
+        <header class="vhead"><div><p class="vkicker">Catálogo</p><h1 class="serif">Serviços e preços</h1></div>
+          <div class="vhead-actions"><button class="btn btn-primary btn-sm" id="newService">+ Novo serviço</button></div></header>
+        <div class="svc-grid" id="serviceList"></div>
+      </section>
+
+      <!-- FOLGAS -->
+      <section class="view" data-view="folgas">
+        <header class="vhead"><div><p class="vkicker">Disponibilidade</p><h1 class="serif">Folgas e bloqueios</h1></div></header>
+        <form class="card form-grid" id="blockForm">
+          <div class="field"><label>De</label><input type="date" name="date" required></div>
+          <div class="field"><label>Até <span class="opt">(opcional)</span></label><input type="date" name="until"></div>
+          <div class="field"><label>Das <span class="opt">(vazio = dia todo)</span></label><input type="time" name="start"></div>
+          <div class="field"><label>Às</label><input type="time" name="end"></div>
+          <div class="field span2"><label>Motivo <span class="opt">(só você vê)</span></label><input name="reason" placeholder="Ex.: curso, médico, feriado"></div>
+          <div class="span2"><button class="btn btn-primary" type="submit">Bloquear</button></div>
+        </form>
+        <div class="list" id="blockList"></div>
+      </section>
+
+      <!-- APARÊNCIA -->
+      <section class="view" data-view="aparencia">
+        <header class="vhead"><div><p class="vkicker">Sua marca</p><h1 class="serif">Aparência</h1></div>
+          <div class="vhead-actions"><a class="btn btn-ghost btn-sm" id="previewLink" href="#" target="_blank" rel="noopener">Ver página ↗</a></div></header>
+        <form id="lookForm">
+          <div class="look-grid">
+            <div>
+              <div class="card">
+                <h2 class="card-title">Logo e nome</h2>
+                <div class="logo-pick">
+                  <span class="logo-box" id="logoBox"></span>
+                  <div class="btn-row">
+                    <label class="btn btn-ghost btn-sm">Enviar logo<input type="file" accept="image/png,image/jpeg,image/webp" id="logoFile" hidden></label>
+                    <button type="button" class="btn btn-ghost btn-sm" id="logoRemove">Remover</button>
+                  </div>
+                  <span class="hint">PNG com fundo transparente fica melhor. Até 4 MB.</span>
+                </div>
+                <div class="field"><label>Nome do studio</label><input name="name" required maxlength="60"></div>
+                <div class="field"><label>Especialidade (aparece abaixo do nome)</label><input name="segment" maxlength="60"></div>
+                <div class="field"><label>Frase de apresentação</label><input name="tagline" maxlength="120"></div>
+                <label class="chk"><input type="checkbox" name="show_name"><span>Mostrar o nome escrito junto da logo</span></label>
+                <div class="field" style="margin-top:14px"><label>Estilo do nome</label>
+                  <div class="seg seg-wide" id="nameStyle"><button type="button" data-v="script" class="script-opt">Cursiva</button><button type="button" data-v="sans">Moderna</button></div></div>
+              </div>
+              <div class="card">
+                <h2 class="card-title">Cores</h2>
+                <div class="themes" id="themes"></div>
+              </div>
+            </div>
+            <div class="preview-col">
+              <p class="hint">Prévia</p>
+              <div class="preview" id="preview"></div>
+            </div>
+          </div>
+          <div class="save-bar"><button class="btn btn-primary" type="submit">Salvar aparência</button></div>
+        </form>
+      </section>
+
+      <!-- WHATSAPP -->
+      <section class="view" data-view="whatsapp">
+        <header class="vhead"><div><p class="vkicker">Mensagens automáticas</p><h1 class="serif">WhatsApp</h1></div></header>
+        <div class="card wa-status" id="waCard"></div>
+        <form id="waForm">
+          <div class="card">
+            <h2 class="card-title">Envios automáticos</h2>
+            <label class="chk"><input type="checkbox" name="wa_send_confirm"><span>Confirmação assim que a cliente agenda (com link do agendamento)</span></label>
+            <label class="chk"><input type="checkbox" name="wa_send_reminder"><span>Lembrete antes do horário</span></label>
+            <div class="field" style="margin-top:12px"><label>Enviar o lembrete</label>
+              <select name="wa_reminder_minutes"><option value="30">30 minutos antes</option><option value="60">1 hora antes</option><option value="120">2 horas antes</option><option value="180">3 horas antes</option><option value="1440">1 dia antes</option></select></div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Textos das mensagens</h2>
+            <p class="hint">Use: {nome} {servicos} {data} {hora} {valor} {endereco} {studio} {codigo} {link} {antecedencia} {agendar}</p>
+            <div class="field"><label>Confirmação automática</label><textarea name="tpl_confirm" rows="6"></textarea></div>
+            <div class="field"><label>Lembrete</label><textarea name="tpl_reminder" rows="6"></textarea></div>
+            <div class="field"><label>Agradecimento (botão no agendamento)</label><textarea name="tpl_thanks" rows="3"></textarea></div>
+            <div class="field"><label>Mensagem que a cliente te envia (quando o automático está desligado)</label><textarea name="tpl_booking" rows="5"></textarea></div>
+          </div>
+          <div class="save-bar"><button class="btn btn-primary" type="submit">Salvar</button></div>
+        </form>
+        <div class="card">
+          <div class="card-row"><h2 class="card-title">Últimas mensagens</h2><button class="btn btn-ghost btn-sm" id="msgRefresh">Atualizar</button></div>
+          <div id="msgList"></div>
+        </div>
+      </section>
+
+      <!-- AJUSTES -->
+      <section class="view" data-view="ajustes">
+        <header class="vhead"><div><p class="vkicker">Configurações</p><h1 class="serif">Ajustes</h1></div></header>
+        <div class="card">
+          <h2 class="card-title">Seu link de agendamento</h2>
+          <p class="hint">Coloque na bio do Instagram, no status e no Google Meu Negócio.</p>
+          <div class="btn-row"><input class="input" id="publicLink" readonly><button class="btn btn-ghost btn-sm" id="copyLink" type="button">Copiar</button><a class="btn btn-ghost btn-sm" id="openLink" href="#" target="_blank" rel="noopener">Abrir</a></div>
+          <p class="hint" style="margin-top:10px">Área da cliente: <a id="clientAreaLink" href="#" target="_blank" rel="noopener"></a></p>
+        </div>
+        <form id="settingsForm">
+          <div class="card">
+            <h2 class="card-title">Contato</h2>
+            <div class="form-grid">
+              <div class="field"><label>WhatsApp do studio</label><input name="whatsapp" inputmode="tel"></div>
+              <div class="field"><label>Instagram</label><input name="instagram" placeholder="seustudio"></div>
+              <div class="field span2"><label>Endereço</label><input name="address"></div>
+              <div class="field span2"><label>Link do Google Maps <span class="opt">(opcional)</span></label><input name="maps_url" type="url"></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Horário de atendimento</h2>
+            <div class="hours" id="hoursEditor"></div>
+            <div class="form-grid">
+              <div class="field"><label>Pausa (início)</label><input type="time" name="break_start"></div>
+              <div class="field"><label>Pausa (fim)</label><input type="time" name="break_end"></div>
+              <div class="field"><label>Intervalo entre horários</label>
+                <select name="step"><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">1 hora</option></select></div>
+              <div class="field"><label>Antecedência mínima para agendar</label>
+                <select name="min_advance_hours"><option value="0">Sem mínimo</option><option value="1">1 hora</option><option value="2">2 horas</option><option value="4">4 horas</option><option value="12">12 horas</option><option value="24">1 dia</option><option value="48">2 dias</option></select></div>
+              <div class="field"><label>Agenda aberta por</label>
+                <select name="max_days_ahead"><option value="7">7 dias</option><option value="14">14 dias</option><option value="21">21 dias</option><option value="30">30 dias</option><option value="45">45 dias</option><option value="60">60 dias</option><option value="90">90 dias</option></select></div>
+              <div class="field"><label>Cliente pode cancelar online até</label>
+                <select name="cancel_min_hours"><option value="0">A qualquer momento</option><option value="2">2 horas antes</option><option value="6">6 horas antes</option><option value="12">12 horas antes</option><option value="24">24 horas antes</option><option value="48">48 horas antes</option></select></div>
+              <div class="field span2"><label>Novos agendamentos</label>
+                <select name="auto_confirm"><option value="0">Ficam pendentes até eu confirmar</option><option value="1">Já entram confirmados</option></select></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Regras e sinal</h2>
+            <div class="field"><label>Política (aparece na página)</label><textarea name="policy"></textarea></div>
+            <div class="field"><label>Aviso de sinal / Pix <span class="opt">(opcional)</span></label><textarea name="deposit_text" placeholder="Ex.: Para garantir o horário, envie um sinal de R$ 20 no Pix (chave…) e mande o comprovante no WhatsApp."></textarea></div>
+          </div>
+          <div class="save-bar"><button class="btn btn-primary" type="submit">Salvar ajustes</button></div>
+        </form>
+        <form class="card" id="pwForm">
+          <h2 class="card-title">Conta</h2>
+          <p class="hint" id="accountEmail"></p>
+          <div class="field"><label>Nova senha</label><input type="password" id="newPw" autocomplete="new-password" minlength="6" required></div>
+          <div class="btn-row"><button class="btn btn-ghost btn-sm" type="submit">Trocar senha</button><button class="btn btn-ghost btn-sm" type="button" data-logout>Sair do painel</button></div>
+        </form>
+      </section>
+
+      <!-- ASSINATURA -->
+      <section class="view" data-view="assinatura">
+        <header class="vhead"><div><p class="vkicker">Seu plano</p><h1 class="serif">Assinatura</h1></div></header>
+        <div class="card plan-card" id="planCard"></div>
+        <div class="card"><h2 class="card-title">Pagamentos</h2><div id="payList"></div></div>
+      </section>
+    </main>
+
+    <button class="fab" id="fab" aria-label="Novo agendamento"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head"><h2 class="serif" id="modalTitle"></h2><button class="icon-btn" data-close aria-label="Fechar">✕</button></header>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="../config.js"></script>
+  <script>window.DN_CONFIG.persistSession = true;</script>
+  <script src="../assets/supabase.js"></script>
+  <script src="../assets/dn.js"></script>
+  <script src="../assets/admin.js"></script>
+</body>
+</html>

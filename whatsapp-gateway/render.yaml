@@ -1,0 +1,17 @@
+# Render Blueprint — sobe o gateway de WhatsApp no plano gratuito
+services:
+  - type: web
+    name: date-nails-whatsapp
+    runtime: node
+    plan: free
+    rootDir: whatsapp-gateway
+    buildCommand: npm install --omit=dev
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: API_KEY
+        generateValue: true
+      - key: SUPABASE_URL
+        value: https://ahtvsvysijmfqwfeuvrc.supabase.co
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

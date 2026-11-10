@@ -1,0 +1,15 @@
+{
+  "name": "date-nails-whatsapp-gateway",
+  "version": "1.0.0",
+  "description": "Gateway de WhatsApp (Baileys) do Date Nails, compatível com as rotas da Evolution API usadas pelo sistema",
+  "type": "module",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "baileys": "7.0.0-rc14",
+    "pino": "^9.0.0",
+    "qrcode": "^1.5.4"
+  }
+}

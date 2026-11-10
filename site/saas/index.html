@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Plataforma · Date Nails</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Great+Vibes&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/admin.css">
+  <script src="../assets/themes.js"></script>
+  <script>dnApplyTheme('rosa')</script>
+  <style>
+    .sa { max-width: 1100px; margin: 0 auto; padding: 30px 18px 60px; }
+    .sa h1 { color: var(--rose-700); margin: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--plum-70); }
+    .tbl { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="sa">
+    <header class="vhead"><div><p class="vkicker">Dono da plataforma</p><h1 class="serif">Date Nails · Plataforma</h1></div>
+      <div class="vhead-actions"><a class="btn btn-ghost btn-sm" href="../painel/">Meu painel</a></div></header>
+    <div id="denied" class="card" hidden><p>Esta área é só para o administrador da plataforma. <a href="../painel/">Entrar</a></p></div>
+    <div id="sa" hidden>
+      <div class="kpis kpis-4" id="kpis"></div>
+      <form class="card" id="pf">
+        <h2 class="card-title">Plano e configurações</h2>
+        <div class="form-grid">
+          <div class="field"><label>Nome do produto</label><input name="saas_name"></div>
+          <div class="field"><label>Endereço do site (sem barra no fim)</label><input name="site_url" placeholder="https://datenails.com.br"></div>
+          <div class="field"><label>Nome do plano</label><input name="plan_name"></div>
+          <div class="field"><label>Preço mensal (R$)</label><input name="plan_price" inputmode="decimal"></div>
+          <div class="field"><label>Dias de teste grátis</label><input name="trial_days" type="number" min="0" max="60"></div>
+          <div class="field"><label>WhatsApp de suporte</label><input name="support_whatsapp"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Salvar</button>
+        <p class="hint">O endereço do site é usado nos links enviados pelo WhatsApp. Preço e teste valem para novos cadastros e próximas cobranças.</p>
+      </form>
+      <div class="card"><h2 class="card-title">Studios</h2><div class="tbl"><table><thead><tr><th>Studio</th><th>Conta</th><th>Status</th><th>Válido até</th><th>Agend. 30d</th><th>WhatsApp</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="../config.js"></script>
+  <script>window.DN_CONFIG.persistSession = true;</script>
+  <script src="../assets/supabase.js"></script>
+  <script src="../assets/dn.js"></script>
+  <script>
+  (async () => {
+    const { sb, $, esc, brl, toast, normPhone } = DN;
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { location.href = '../painel/'; return; }
+    let list;
+    try { list = await DN.rpc('dn_sa_overview'); } catch { $('#denied').hidden = false; return; }
+    $('#sa').hidden = false;
+    const { data: pf } = await sb.from('dn_platform').select('*').single();
+    const f = $('#pf');
+    ['saas_name', 'site_url', 'plan_name', 'support_whatsapp'].forEach(k => f[k].value = pf[k] || '');
+    f.plan_price.value = (pf.plan_price / 100).toFixed(2).replace('.', ','); f.trial_days.value = pf.trial_days;
+    if (!pf.site_url) f.site_url.value = new URL('../', location.href).href.replace(/\/$/, '');
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const { error } = await sb.from('dn_platform').update({ saas_name: f.saas_name.value, site_url: f.site_url.value.replace(/\/$/, ''), plan_name: f.plan_name.value,
+        plan_price: Math.round(parseFloat(f.plan_price.value.replace(',', '.')) * 100), trial_days: +f.trial_days.value, support_whatsapp: normPhone(f.support_whatsapp.value) }).eq('id', 1);
+      toast(error ? error.message : 'Salvo!', !!error);
+    });
+    const render = () => {
+      const act = list.filter(s => s.active);
+      $('#kpis').innerHTML = `<div class="kpi"><b>${list.length}</b><span>studios</span></div><div class="kpi"><b>${list.filter(s => s.active && s.status === 'ativa').length}</b><span>pagantes</span></div>
+        <div class="kpi"><b>${list.filter(s => s.active && s.status === 'trial').length}</b><span>em teste</span></div><div class="kpi"><b>${brl(list.filter(s => s.active && s.status === 'ativa').length * pf.plan_price)}</b><span>receita mensal</span></div>`;
+      $('#rows').innerHTML = list.map(s => {
+        const until = s.status === 'trial' ? s.trial_ends_at : s.paid_until;
+        return `<tr><td><b>${esc(s.name)}</b><br><a href="../agendar/?s=${s.slug}" target="_blank">/${s.slug}</a></td><td>${esc(s.email)}<br>${esc(s.whatsapp)}</td>
+        <td><span class="pill ${s.active ? 'st-concluido' : 'st-faltou'}">${s.active ? (s.status === 'trial' ? 'teste' : 'ativa') : 'inativa'}</span></td>
+        <td>${until ? new Date(until).toLocaleDateString('pt-BR') : '—'}</td><td>${s.bookings_30d}</td><td>${s.wa_status}</td>
+        <td><button class="btn btn-ghost btn-sm" data-ext="${s.id}">+30 dias</button></td></tr>`;
+      }).join('');
+    };
+    render();
+    document.addEventListener('click', async e => {
+      const b = e.target.closest('[data-ext]'); if (!b) return;
+      try { await DN.rpc('dn_sa_extend', { p_studio: b.dataset.ext, p_days: 30 }); list = await DN.rpc('dn_sa_overview'); render(); toast('Liberado +30 dias.'); } catch (err) { toast(err.message, true); }
+    });
+  })();
+  </script>
+</body>
+</html>
